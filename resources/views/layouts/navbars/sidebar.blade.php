@@ -31,6 +31,14 @@
                             <span class="nav-link-text">{{ __('Order') }}</span>
                         </a>                       
                     </li>
+
+                    <li class="nav-item ">
+                        <a class="nav-link collapsed" href="{{ route('partner.changepassword') }}" role="button"  aria-controls="navbar-dashboards">
+                            <i class="ni ni-book-bookmark text-primary"></i>
+                            <span class="nav-link-text">{{ __('Change Password') }}</span>
+                        </a>                       
+                    </li>
+                    
                 @else
 
                     <li class="nav-item ">

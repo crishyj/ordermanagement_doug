@@ -200,6 +200,10 @@
             height: -webkit-fill-available;
         }
 
+        #imageModal .modal-dialog .modal-content img{
+            width: 100%;
+        } 
+
         .modal-body img{
             width: 100%;
         }

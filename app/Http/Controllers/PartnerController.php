@@ -38,6 +38,47 @@ class PartnerController extends Controller
             'company' => $request['company'],
             'permission' => '2',
         ]);
+
+        $receiver_email = $request['email'];
+
+        $sender = User::find(1);
+        $sender_email = $sender->email;     
+        
+        $emailFrom = $sender_email;
+        $reply = $sender_email;
+        $to = $receiver_email;
+        $subject = "You Registered to Order Management System";
+        
+        $message = '<body >
+            <div style="width:500px; margin:10px auto; background:#f1f1f1; border:1px solid #ccc">
+                <table  width="100%" border="0" cellspacing="5" cellpadding="10">
+                    <tr>
+                        <td style="font-size:14px; color:#323232">Name</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:16px; font-weight:bold"><strong>' .  $request['name'] .'</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:14px; color:#323232">Email :</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:16px;  font-weight:bold"><strong>'.$request['email'] .'</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:14px; color:#323232">Password :</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:16px;  font-weight:bold"><strong>'.$request['password'] .'</strong></td>
+                    </tr>                                                        
+                </table>
+            </div>
+        </body>
+        ';
+        
+        $headers = "From:" . $emailFrom . "\r\n";
+        $headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
+        
+        mail($to,$subject,$message,$headers);
         
         $options->save();
 
@@ -93,6 +134,48 @@ class PartnerController extends Controller
         if(Hash::check($request['old_password'], $options->password)){      
             $options->password = Hash::make($request['password']);
             $options->save();
+
+            $receiver_email = $options->email;
+
+            $sender = User::find(1);
+            $sender_email = $sender->email;     
+            
+            $emailFrom = $sender_email;
+            $reply = $sender_email;
+            $to = $receiver_email;
+            $subject = "You Password Changed";
+            
+            $message = '<body >
+                <div style="width:500px; margin:10px auto; background:#f1f1f1; border:1px solid #ccc">
+                    <table  width="100%" border="0" cellspacing="5" cellpadding="10">
+                        <tr>
+                            <td style="font-size:14px; color:#323232">Name</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:16px; font-weight:bold"><strong>' . $options->name .'</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:14px; color:#323232">Email :</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:16px;  font-weight:bold"><strong>'. $options->email  .'</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:14px; color:#323232">New Password :</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:16px;  font-weight:bold"><strong>'.$request['password'] .'</strong></td>
+                        </tr>                                                        
+                    </table>
+                </div>
+            </body>
+            ';
+            
+            $headers = "From:" . $emailFrom . "\r\n";
+            $headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
+            
+            mail($to,$subject,$message,$headers);
+
             return redirect()->back()->with('success', 'Successfully Changed');    
         }else{
            return redirect()->back()->withErrors(['old_password' => 'Old password is not matched.']);

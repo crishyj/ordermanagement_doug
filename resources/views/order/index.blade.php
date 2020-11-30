@@ -193,11 +193,15 @@
     <link rel="stylesheet" href="{{ asset('argon') }}/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css">
     <style>
         #imageModal{
-            margin-top: 25%;
+            margin-top: 5%;
         }
 
         #imageModal img{
             height: -webkit-fill-available;
+        }
+
+        .modal-body img{
+            width: 100%;
         }
     </style>
 @endpush

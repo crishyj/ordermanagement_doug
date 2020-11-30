@@ -10,6 +10,11 @@ use App\Models\User;
 
 class PartnerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index(){
         $options = User::where('permission', '!=', '1')->get();     
         return view('partner.index', compact('options'));
@@ -47,7 +52,7 @@ class PartnerController extends Controller
         $emailFrom = $sender_email;
         $reply = $sender_email;
         $to = $receiver_email;
-        $subject = "You Registered to Order Management System";
+        $subject = "Stoneworks Partner Portal Login Information";
         
         $message = '<body >
             <div style="width:500px; margin:10px auto; background:#f1f1f1; border:1px solid #ccc">

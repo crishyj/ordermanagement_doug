@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                    {{ __('Welcome to visit the Order Management System!') }}
+                    {{ __('Welcome to the Stoneworks Partner Portal.') }}
                 </div>
             </div>
         </div>

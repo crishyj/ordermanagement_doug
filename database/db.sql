@@ -37,17 +37,17 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table order.migrations: ~5 rows (approximately)
 DELETE FROM `migrations`;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-	(71, '2014_10_12_000000_create_users_table', 1),
-	(72, '2014_10_12_100000_create_password_resets_table', 1),
-	(73, '2019_08_19_000000_create_failed_jobs_table', 1),
-	(74, '2020_11_25_183616_create_orders_table', 1),
-	(75, '2020_11_27_071851_create_stats_table', 1);
+	(91, '2014_10_12_000000_create_users_table', 1),
+	(92, '2014_10_12_100000_create_password_resets_table', 1),
+	(93, '2019_08_19_000000_create_failed_jobs_table', 1),
+	(94, '2020_11_25_183616_create_orders_table', 1),
+	(95, '2020_11_27_071851_create_stats_table', 1);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 
 
@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `info` text COLLATE utf8mb4_unicode_ci,
   `users_id` int(11) DEFAULT NULL,
   `stats_id` int(11) DEFAULT NULL,
+  `track` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -96,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `stats` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table order.stats: ~2 rows (approximately)
+-- Dumping data for table order.stats: ~3 rows (approximately)
 DELETE FROM `stats`;
 /*!40000 ALTER TABLE `stats` DISABLE KEYS */;
 INSERT INTO `stats` (`id`, `name`, `created_at`, `updated_at`) VALUES
@@ -124,11 +125,11 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `users_email_unique` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table order.users: ~0 rows (approximately)
+-- Dumping data for table order.users: ~1 rows (approximately)
 DELETE FROM `users`;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `company`, `phone`, `permission`, `remember_token`, `created_at`, `updated_at`) VALUES
-	(1, 'Admin', 'sales@stonewi-orders.com', NULL, '$2y$10$RynCYGqyQ2zvvarRqqCUa.fcFdKnkpbOV27lvEyWKxNU27mbCEIO6', NULL, NULL, '1', NULL, '2020-12-01 05:16:49', '2020-12-01 05:16:49');
+	(1, 'Admin', 'sales@stonewi-orders.com', NULL, '$2y$10$xU5imtioA00z8BeSSG/Ev.qtMSBSCSFMOq4R1Ap2dYQDK8UmNn26K', NULL, NULL, '1', NULL, '2020-12-01 07:32:36', '2020-12-01 07:32:36');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

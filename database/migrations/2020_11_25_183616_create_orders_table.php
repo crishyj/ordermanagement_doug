@@ -20,6 +20,7 @@ class CreateOrdersTable extends Migration
             $table->text('info')->nullable();
             $table->integer('users_id')->nullable();
             $table->integer('stats_id')->nullable();
+            $table->string('track')->nullable();
             $table->timestamps();
         });
     }

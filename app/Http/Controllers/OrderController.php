@@ -212,6 +212,74 @@ class OrderController extends Controller
             $options->save();
             return response()->json('success');
         }
+        elseif($request->get('track')){         
+            $options = Order::find($request->get('id'));
+            $options->track = $request->get('track');
+
+            $sender_id = $options->users_id;
+            $sender = User::find($sender_id);
+            $sender_email = $sender->email;
+
+            $receiver = User::find(1);
+            $receiver_email = $receiver->email;
+
+            $stats = Stat::find($options->stats_id);
+            $stat = $stats->name;
+            
+            $product_name = $options->name;
+            $product_info = $options->info;
+            $product_image =url('/'). '/'. $options->image;
+
+            $trak = $request->get('track');
+
+            $emailFrom = $sender_email;
+            $reply = $sender_email;
+            $to = $receiver_email;
+            $subject = "Order Track";
+            
+            $message = '<body >
+                <div style="width:500px; margin:10px auto; background:#f1f1f1; border:1px solid #ccc">
+                    <table  width="100%" border="0" cellspacing="5" cellpadding="10">
+                        <tr>
+                            <td style="font-size:14px; color:#323232">Product Name</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:16px; font-weight:bold"><strong>' . $product_name .'</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:14px; color:#323232">Product Information :</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:16px;  font-weight:bold"><strong>'.$product_info .'</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:14px; color:#323232"> <a href ="'.$product_image.'"> Product Image </a> </td>
+                        </tr>       
+                        <tr>
+                            <td style="font-size:14px; color:#323232">Order Status :</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:16px;  font-weight:bold"><strong>'.$stat .'</strong></td>
+                        </tr>                          
+                        <tr>
+                            <td style="font-size:14px; color:#323232">Order Track :</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:16px;  font-weight:bold"><strong>'. $trak .'</strong></td>
+                        </tr>  
+                    </table>
+                </div>
+            </body>
+            ';
+           
+            $headers = "From:" . $emailFrom . "\r\n";
+            $headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
+          
+            mail($to,$subject,$message,$headers);
+
+            $options->save();
+            return response()->json('success');
+        }
         else{
             $options = Order::find($request->get('id'));
 

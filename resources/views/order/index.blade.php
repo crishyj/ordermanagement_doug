@@ -28,6 +28,7 @@
                                     <th scope="col">{{ __('Shipping information') }}</th>
                                     <th scope="col">{{ __('Partner Name') }}</th>     
                                     <th scope="col">{{ __('Order Status')}}</th>  
+                                    <th scope="col">{{ __('Order Track')}}</th>  
                                     <th scope="col"></th>                                  
                                 </tr>
                             </thead>
@@ -63,6 +64,9 @@
                                             @empty       
                                             
                                             @endforelse  
+                                        </td>
+                                        <td>
+                                            {{ $option->track }}
                                         </td>
                                         <td class="text-right">
                                             <div class="dropdown">

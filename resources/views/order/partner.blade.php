@@ -24,6 +24,7 @@
                                     <th scope="col">{{ __('Product Image') }}</th>
                                     <th scope="col">{{ __('Shipping information') }}</th>
                                     <th scope="col">{{ __('Order Status')}}</th>  
+                                    <th scope="col">{{ __('Track Order')}}</th>  
                                     <th scope="col"></th>                                  
                                 </tr>
                             </thead>
@@ -34,6 +35,7 @@
                                         <input type="hidden" name="name" class="name" value="{{$option->name}}" />  
                                         <input type="hidden" name="image" class="image" value="{{$option->image}}" />  
                                         <input type="hidden" name="info" class="info" value="{{$option->info}}" />  
+                                        <input type="hidden" name="track" class="track" value="{{$option->track}}" />  
 
                                         <td>{{ $option->name }}</td>
                                         <td> <img src = {{asset($option->image)}} width = 100px> </td> 
@@ -49,14 +51,16 @@
                                             
                                             @endforelse  
                                         </td>
+                                        <td>{{ $option->track }}</td>
                                         <td class="text-right">
                                             <div class="dropdown">
                                                 <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                    <a href="#" class="dropdown-item detail_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="detailModal"> <i class="ni ni-tag"></i> Details </a>
-                                                    <a href="#" class="dropdown-item stat_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="assignModal"> <i class="ni ni-tag"></i> Status </a>
+                                                    <a href="#" class="dropdown-item detail_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="trackModal"> <i class="ni ni-tag"></i> View Order </a>
+                                                    <a href="#" class="dropdown-item stat_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="assignModal"> <i class="ni ni-tag"></i> View Status </a>
+                                                    <a href="#" class="dropdown-item track_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="trackModal"> <i class="ni ni-tag"></i> Add Tracking </a>
                                                 </div>
                                             </div>
                                          
@@ -79,7 +83,6 @@
                     <button type="button" class="close" data-dismiss="modal">×</button>
                 </div>
                 <div class="modal-body" id = "detail_form">
-                    <input type="hidden" name="order_id" class="order_id" id ="order_id" />
                     <div class="form-group">
                         <label for="name" class="font-weight-600"> {{ __('Product Name')}} :</label>
                         <input type="text" name="name" id="name" class="form-control name" readonly>
@@ -144,6 +147,50 @@
                                     <option  value="{{$stat->id}}">{{ $stat->name }}</option>
                                 @endforeach
                             </select>
+                        </div>                         
+                    </div>              
+                    
+                    <div class="modal-footer">    
+                        <button type="button" class="btn btn-primary btn-submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>&nbsp;{{ __('Save')}}</button>                       
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-fw fa-lg fa-times-circle"></i>&nbsp;{{ __('Close')}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="trackModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form action="" method="post" id="track_form" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header">
+                        <h4 class="modal-title">{{ __('Track Order')}}</h4>
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="order_id1" class="order_id1" id ="order_id1" />
+                        <div class="form-group">
+                            <label for="name" class="font-weight-600"> {{ __('Product Name')}} :</label>
+                            <input type="text" name="name" id="name" class="form-control name" readonly>
+                        </div>   
+                        <div class="form-group{{ $errors->has('image') ? ' has-danger' : '' }}">
+                            <label for="image">Product Image</label>
+                            <div>
+                                <img src = "" class="product_image">
+                            </div>                                                     
+                        </div>
+
+                        <div class="form-group{{ $errors->has('info') ? ' has-danger' : '' }}">
+                            <label for="info">Shipping Information</label>
+                            <div class="input-group input-group-alternative">                                   
+                                <textarea class="form-control info" placeholder="{{ __('Shipping Information') }}" name="info" id="info" cols="30" rows="10" readonly></textarea>
+                            </div>                           
+                        </div>   
+
+                        <div class="form-group">
+                            <label for="track" class="font-weight-600"> {{ __('Track Information')}} :</label>
+                            <input type="text" name="track" id="track" class="form-control track" required>
                         </div>                         
                     </div>              
                     
@@ -231,6 +278,65 @@
                 form_data.append("_token", _token);
                 form_data.append("id", id);
                 form_data.append("stat", stat);            
+                
+                $.ajax({
+                    url: "{{route('order.update')}}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: form_data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success : function(response) {
+                        if(response == 'success') {  
+                            window.location.reload();                          
+                        } else {
+                            let messages = response.data;
+                            if(messages.option) {                               
+                            }
+                        }
+                    },
+                    error: function(response) {
+                        $("#ajax-loading").fadeOut();
+                        if(response.responseJSON.message == 'The given data was invalid.'){                            
+                            let messages = response.responseJSON.errors;
+                            if(messages.option) {                                
+                            }
+                            alert("Something went wrong");
+                            window.location.reload();        
+                        } else {
+                            alert("Something went wrong");
+                        }
+                    }
+                });
+            });
+        
+
+            $(document).on('click', '.track_btn', function (){
+                let id = $(this).data('id');
+                let name = $(this).parents('tr').find('.name').val().trim();     
+                let product_image = $(this).parents('tr').find('.image').val().trim();
+                let info = $(this).parents('tr').find('.info').val().trim(); 
+                let track = $(this).parents('tr').find('.track').val().trim(); 
+
+                $("#track_form .order_id1").val(id);
+                $("#track_form .name").val(name);
+                $("#track_form .product_image").attr("src", '../'+product_image);
+                $("#track_form .info").val(info);
+                $("#track_form .track").val(track);
+                $("#trackModal").modal();
+            });
+
+
+            $("#track_form .btn-submit").click(function(){
+                let _token = $('input[name=_token]').val();
+                let id = $('#order_id1').val();         
+                let track = $('#track').val();
+
+                var form_data =new FormData();
+                form_data.append("_token", _token);
+                form_data.append("id", id);
+                form_data.append("track", track);            
                 
                 $.ajax({
                     url: "{{route('order.update')}}",

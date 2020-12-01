@@ -28,7 +28,7 @@
                     <li class="nav-item ">
                         <a class="nav-link collapsed" href="{{ route('order.index') }}" role="button"  aria-controls="navbar-dashboards">
                             <i class="ni ni-book-bookmark text-primary"></i>
-                            <span class="nav-link-text">{{ __('Order') }}</span>
+                            <span class="nav-link-text">{{ __('Orders') }}</span>
                         </a>                       
                     </li>
 
@@ -51,7 +51,7 @@
                     <li class="nav-item ">
                         <a class="nav-link collapsed" href="{{ route('order.partner') }}" role="button"  aria-controls="navbar-dashboards">
                             <i class="ni ni-book-bookmark text-primary"></i>
-                            <span class="nav-link-text">{{ __('Order') }}</span>
+                            <span class="nav-link-text">{{ __('Orders') }}</span>
                         </a>                       
                     </li>
                 @endif    

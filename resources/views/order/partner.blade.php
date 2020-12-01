@@ -22,9 +22,8 @@
                                 <tr>
                                     <th scope="col">{{ __('Product Name') }}</th>
                                     <th scope="col">{{ __('Product Image') }}</th>
-                                    <th scope="col">{{ __('Shipping information') }}</th>
                                     <th scope="col">{{ __('Order Status')}}</th>  
-                                    <th scope="col">{{ __('Track Order')}}</th>  
+                                    <th scope="col">{{ __('Tracking Information')}}</th>  
                                     <th scope="col"></th>                                  
                                 </tr>
                             </thead>
@@ -39,7 +38,6 @@
 
                                         <td>{{ $option->name }}</td>
                                         <td> <img src = {{asset($option->image)}} width = 100px> </td> 
-                                        <td>{{ $option->info }}</td>
                                         <td>
                                             @forelse($stats as $stat)
                                                 @php
@@ -53,7 +51,9 @@
                                         </td>
                                         <td>{{ $option->track }}</td>
                                         <td class="text-right">
-                                            <div class="dropdown">
+                                            <a href="#" class="btn btn-primary track_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="trackModal"> View Order </a>
+                                            <!-- <div class="dropdown">
+
                                                 <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </a>
@@ -62,7 +62,7 @@
                                                     <a href="#" class="dropdown-item stat_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="assignModal"> <i class="ni ni-tag"></i> View Status </a>
                                                     <a href="#" class="dropdown-item track_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="trackModal"> <i class="ni ni-tag"></i> Add Tracking </a>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                          
                                         </td>
                                     </tr>
@@ -75,89 +75,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="detailModal">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">             
-                <div class="modal-header">
-                    <h4 class="modal-title">{{ __('Order Details')}}</h4>
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                </div>
-                <div class="modal-body" id = "detail_form">
-                    <div class="form-group">
-                        <label for="name" class="font-weight-600"> {{ __('Product Name')}} :</label>
-                        <input type="text" name="name" id="name" class="form-control name" readonly>
-                    </div>   
-                    <div class="form-group{{ $errors->has('image') ? ' has-danger' : '' }}">
-                        <label for="image">Product Image</label>
-                        <div>
-                            <img src = "" class="product_image">
-                        </div>                                                     
-                    </div>
-
-                    <div class="form-group{{ $errors->has('info') ? ' has-danger' : '' }}">
-                        <label for="info">Shipping Information</label>
-                        <div class="input-group input-group-alternative">                                   
-                            <textarea class="form-control info" placeholder="{{ __('Shipping Information') }}" name="info" id="info" cols="30" rows="10" readonly></textarea>
-                        </div>                           
-                    </div>   
-                                            
-                </div>              
-                
-                <div class="modal-footer">    
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-fw fa-lg fa-times-circle"></i>&nbsp;{{ __('Close')}}</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-
-    <div class="modal fade" id="statusModal">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <form action="" method="post" id="stat_form" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-header">
-                        <h4 class="modal-title">{{ __('Assign Order')}}</h4>
-                        <button type="button" class="close" data-dismiss="modal">×</button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="order_id" class="order_id" id ="order_id" />
-                        <div class="form-group">
-                            <label for="name" class="font-weight-600"> {{ __('Product Name')}} :</label>
-                            <input type="text" name="name" id="name" class="form-control name" readonly>
-                        </div>   
-                        <div class="form-group{{ $errors->has('image') ? ' has-danger' : '' }}">
-                            <label for="image">Product Image</label>
-                            <div>
-                                <img src = "" class="product_image">
-                            </div>                                                     
-                        </div>
-
-                        <div class="form-group{{ $errors->has('info') ? ' has-danger' : '' }}">
-                            <label for="info">Shipping Information</label>
-                            <div class="input-group input-group-alternative">                                   
-                                <textarea class="form-control info" placeholder="{{ __('Shipping Information') }}" name="info" id="info" cols="30" rows="10" readonly></textarea>
-                            </div>                           
-                        </div>   
-
-                        <div class="form-group">
-                            <label for="users"> Status </label>
-                            <select class="form-control" id="stat" name="stat">
-                                @foreach ($stats as $stat)
-                                    <option  value="{{$stat->id}}">{{ $stat->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>                         
-                    </div>              
-                    
-                    <div class="modal-footer">    
-                        <button type="button" class="btn btn-primary btn-submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>&nbsp;{{ __('Save')}}</button>                       
-                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-fw fa-lg fa-times-circle"></i>&nbsp;{{ __('Close')}}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <div class="modal fade" id="trackModal">
         <div class="modal-dialog modal-lg">
@@ -172,7 +89,7 @@
                         <input type="hidden" name="order_id1" class="order_id1" id ="order_id1" />
                         <div class="form-group">
                             <label for="name" class="font-weight-600"> {{ __('Product Name')}} :</label>
-                            <input type="text" name="name" id="name" class="form-control name" readonly>
+                            <input type="text" name="name" id="name" class="form-control name" required>
                         </div>   
                         <div class="form-group{{ $errors->has('image') ? ' has-danger' : '' }}">
                             <label for="image">Product Image</label>
@@ -184,9 +101,18 @@
                         <div class="form-group{{ $errors->has('info') ? ' has-danger' : '' }}">
                             <label for="info">Shipping Information</label>
                             <div class="input-group input-group-alternative">                                   
-                                <textarea class="form-control info" placeholder="{{ __('Shipping Information') }}" name="info" id="info" cols="30" rows="10" readonly></textarea>
+                                <textarea class="form-control info" placeholder="{{ __('Shipping Information') }}" name="info" id="info" cols="30" rows="10" required></textarea>
                             </div>                           
                         </div>   
+
+                        <div class="form-group">
+                            <label for="users"> Status </label>
+                            <select class="form-control" id="stat" name="stat">
+                                @foreach ($stats as $stat)
+                                    <option  value="{{$stat->id}}">{{ $stat->name }}</option>
+                                @endforeach
+                            </select>
+                        </div> 
 
                         <div class="form-group">
                             <label for="track" class="font-weight-600"> {{ __('Track Information')}} :</label>
@@ -234,84 +160,7 @@
     <script src="{{ asset('argon') }}/vendor/datatables.net-select/js/dataTables.select.min.js"></script>
     <script>
         $(document).ready(function(){
-
-            $(document).on('click', '.image_modal', function (){
-                let product_image = $(this).parents('tr').find('.image').val().trim();
-                $("#imageModal .product_image").attr("src", '../'+product_image);
-                $("#imageModal").modal();
-            });
-
-            $(document).on('click', '.detail_btn', function (){
-                let id = $(this).data('id');
-                let name = $(this).parents('tr').find('.name').val().trim();     
-                let product_image = $(this).parents('tr').find('.image').val().trim();
-                let info = $(this).parents('tr').find('.info').val().trim(); 
-
-                $("#detail_form .order_id").val(id);
-                $("#detail_form .name").val(name);
-                $("#detail_form .product_image").attr("src", '../'+product_image);
-                $("#detail_form .info").val(info);
-                $("#detailModal").modal();
-            });
-          
-
-            $(document).on('click', '.stat_btn', function (){
-                let id = $(this).data('id');
-                let name = $(this).parents('tr').find('.name').val().trim();     
-                let product_image = $(this).parents('tr').find('.image').val().trim();
-                let info = $(this).parents('tr').find('.info').val().trim(); 
-
-                $("#stat_form .order_id").val(id);
-                $("#stat_form .name").val(name);
-                $("#stat_form .product_image").attr("src", '../'+product_image);
-                $("#stat_form .info").val(info);
-                $("#statusModal").modal();
-            });
-
-
-            $("#stat_form .btn-submit").click(function(){
-                let _token = $('input[name=_token]').val();
-                let id = $('#order_id').val();         
-                let stat = $('#stat').val();
-
-                var form_data =new FormData();
-                form_data.append("_token", _token);
-                form_data.append("id", id);
-                form_data.append("stat", stat);            
-                
-                $.ajax({
-                    url: "{{route('order.update')}}",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: form_data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success : function(response) {
-                        if(response == 'success') {  
-                            window.location.reload();                          
-                        } else {
-                            let messages = response.data;
-                            if(messages.option) {                               
-                            }
-                        }
-                    },
-                    error: function(response) {
-                        $("#ajax-loading").fadeOut();
-                        if(response.responseJSON.message == 'The given data was invalid.'){                            
-                            let messages = response.responseJSON.errors;
-                            if(messages.option) {                                
-                            }
-                            alert("Something went wrong");
-                            window.location.reload();        
-                        } else {
-                            alert("Something went wrong");
-                        }
-                    }
-                });
-            });
-        
-
+           
             $(document).on('click', '.track_btn', function (){
                 let id = $(this).data('id');
                 let name = $(this).parents('tr').find('.name').val().trim();     
@@ -330,12 +179,18 @@
 
             $("#track_form .btn-submit").click(function(){
                 let _token = $('input[name=_token]').val();
-                let id = $('#order_id1').val();         
+                let id = $('#order_id1').val();   
+                let name = $('#name').val();
+                let info = $('#info').val();
+                let stat = $('#stat').val(); 
                 let track = $('#track').val();
 
                 var form_data =new FormData();
                 form_data.append("_token", _token);
                 form_data.append("id", id);
+                form_data.append("name", name);   
+                form_data.append("info", info);   
+                form_data.append("stat", stat);       
                 form_data.append("track", track);            
                 
                 $.ajax({

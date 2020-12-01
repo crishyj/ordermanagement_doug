@@ -40,7 +40,7 @@
                                         <input type="hidden" name="info" class="info" value="{{$option->info}}" />  
 
                                         <td>{{ $option->name }}</td>
-                                        <td> <a href="#" class="image_modal" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="imageModal"> <img src = {{asset($option->image)}} width = 50px> </a> </td> 
+                                        <td> <img src = {{asset($option->image)}} width = 100px> </td> 
                                         <td>{{ $option->info }}</td>
                                         <td> 
                                             @forelse($users as $user)
@@ -88,13 +88,13 @@
         </div>
     </div>
 
-    <div class="modal fade" id ="imageModal">
+    <!-- <div class="modal fade" id ="imageModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <img src = "" class="product_image">
             </div>
         </div>
-    </div>
+    </div> -->
     
     <div class="modal fade" id="editModal">
         <div class="modal-dialog modal-lg">

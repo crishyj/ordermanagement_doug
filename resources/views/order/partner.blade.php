@@ -36,7 +36,7 @@
                                         <input type="hidden" name="info" class="info" value="{{$option->info}}" />  
 
                                         <td>{{ $option->name }}</td>
-                                        <td> <a href="#" class="image_modal" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="imageModal"> <img src = {{asset($option->image)}} width = 50px> </a> </td> 
+                                        <td> <img src = {{asset($option->image)}} width = 100px> </td> 
                                         <td>{{ $option->info }}</td>
                                         <td>
                                             @forelse($stats as $stat)
@@ -55,9 +55,11 @@
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                                    <a href="#" class="dropdown-item detail_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="detailModal"> <i class="ni ni-tag"></i> Details </a>
                                                     <a href="#" class="dropdown-item stat_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="assignModal"> <i class="ni ni-tag"></i> Status </a>
                                                 </div>
                                             </div>
+                                         
                                         </td>
                                     </tr>
                                 @endforeach
@@ -69,13 +71,42 @@
         </div>
     </div>
 
-    <div class="modal fade" id ="imageModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <img src = "" class="product_image">
+    <div class="modal fade" id="detailModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">             
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ __('Order Details')}}</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body" id = "detail_form">
+                    <input type="hidden" name="order_id" class="order_id" id ="order_id" />
+                    <div class="form-group">
+                        <label for="name" class="font-weight-600"> {{ __('Product Name')}} :</label>
+                        <input type="text" name="name" id="name" class="form-control name" readonly>
+                    </div>   
+                    <div class="form-group{{ $errors->has('image') ? ' has-danger' : '' }}">
+                        <label for="image">Product Image</label>
+                        <div>
+                            <img src = "" class="product_image">
+                        </div>                                                     
+                    </div>
+
+                    <div class="form-group{{ $errors->has('info') ? ' has-danger' : '' }}">
+                        <label for="info">Shipping Information</label>
+                        <div class="input-group input-group-alternative">                                   
+                            <textarea class="form-control info" placeholder="{{ __('Shipping Information') }}" name="info" id="info" cols="30" rows="10" readonly></textarea>
+                        </div>                           
+                    </div>   
+                                            
+                </div>              
+                
+                <div class="modal-footer">    
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-fw fa-lg fa-times-circle"></i>&nbsp;{{ __('Close')}}</button>
+                </div>
             </div>
         </div>
     </div>
+    
 
     <div class="modal fade" id="statusModal">
         <div class="modal-dialog modal-lg">
@@ -138,6 +169,10 @@
         #imageModal img{
             height: -webkit-fill-available;
         }
+
+        .modal-body img{
+            width: 100%;
+        }
     </style>
 @endpush
 
@@ -158,7 +193,19 @@
                 $("#imageModal .product_image").attr("src", '../'+product_image);
                 $("#imageModal").modal();
             });
-          
+
+            $(document).on('click', '.detail_btn', function (){
+                let id = $(this).data('id');
+                let name = $(this).parents('tr').find('.name').val().trim();     
+                let product_image = $(this).parents('tr').find('.image').val().trim();
+                let info = $(this).parents('tr').find('.info').val().trim(); 
+
+                $("#detail_form .order_id").val(id);
+                $("#detail_form .name").val(name);
+                $("#detail_form .product_image").attr("src", '../'+product_image);
+                $("#detail_form .info").val(info);
+                $("#detailModal").modal();
+            });
           
 
             $(document).on('click', '.stat_btn', function (){

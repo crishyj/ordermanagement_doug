@@ -15,6 +15,10 @@ class StatTableSeeder extends Seeder
     public function run()
     {
         Stat::insert([
+            'name' => 'New',            
+        ]);
+
+        Stat::insert([
             'name' => 'Processing',            
         ]);
 

@@ -51,9 +51,17 @@
                                         <strong>{{ $errors->first('info') }}</strong>
                                     </span>
                                 @endif
-                            </div>                          
-                           
+                            </div>      
 
+                            <div class="form-group">
+                                <label for="users"> Partner Name </label>
+                                <select class="form-control input-group-alternative mb-3" id="user" name="user">
+                                    @foreach ($users as $user)
+                                        <option  value="{{$user->id}}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>       
+                            
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary mt-4">{{ __('Create Order') }}</button>
                             </div>

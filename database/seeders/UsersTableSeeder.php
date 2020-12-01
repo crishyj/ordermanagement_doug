@@ -16,8 +16,8 @@ class UsersTableSeeder extends Seeder
     {
         User::create([
             'name' => 'Admin',
-            'email' => 'orders@mosaicorders.com',
-            'password' => bcrypt('123456'),
+            'email' => 'sales@stonewi-orders.com',
+            'password' => bcrypt('123456789'),
             'permission' => '1',
         ]);
     }

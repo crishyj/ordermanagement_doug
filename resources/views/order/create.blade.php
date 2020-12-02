@@ -42,7 +42,7 @@
                             </div>
                            
                             <div class="form-group{{ $errors->has('info') ? ' has-danger' : '' }}">
-                                <label for="info">shipping Information</label>
+                                <label for="info">Order Information</label>
                                 <div class="input-group input-group-alternative">                                   
                                     <textarea class="form-control{{ $errors->has('info') ? ' is-invalid' : '' }}" placeholder="{{ __('Shipping Information') }}" name="info" id="info" cols="30" rows="10" required></textarea>
                                 </div>

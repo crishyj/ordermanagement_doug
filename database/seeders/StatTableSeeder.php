@@ -19,6 +19,11 @@ class StatTableSeeder extends Seeder
         ]);
 
         Stat::insert([
+            'name' => 'Hold Partner Location',            
+        ]);
+
+
+        Stat::insert([
             'name' => 'Processing',            
         ]);
 

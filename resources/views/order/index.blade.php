@@ -25,7 +25,7 @@
                                 <tr>
                                     <th scope="col">{{ __('Product Name') }}</th>
                                     <th scope="col">{{ __('Product Image') }}</th>
-                                    <th scope="col">{{ __('Shipping information') }}</th>
+                                    <th scope="col">{{ __('Order information') }}</th>
                                     <th scope="col">{{ __('Partner Name') }}</th>     
                                     <th scope="col">{{ __('Order Status')}}</th>  
                                     <th scope="col">{{ __('Order Track')}}</th>  

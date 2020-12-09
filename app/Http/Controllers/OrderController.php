@@ -16,7 +16,7 @@ class OrderController extends Controller
     }
     
     public function index(){
-        $options = Order::all();     
+        $options = Order::where('archive', '!=', '1')->get();     
         $users = User::where('permission', '!=', '1')->get();     
         $stats = Stat::all();
         return view('order.index', compact('options', 'users', 'stats'));
@@ -306,17 +306,24 @@ class OrderController extends Controller
         if (!$options) {
             return back()->withErrors(['delete' => 'Something went wrong.']);
         }
-        unlink($options['image']);
-        $options->delete();        
-        return back()->with('success', 'Deleted Successfully');
+        $options->archive = '1';
+        $options->save();  
+        return back()->with('success', 'Succefully Moved');
     }
 
     public function partner(){
         $userId = Auth::id();      
         $users = User::find($userId);
-        $orders = Order::where('users_id', $userId)->get();        
+        $orders = Order::where('users_id', $userId)->where('archive', '!=', '1')->get();        
         $stats = Stat::all();
         return view('order.partner', compact('orders', 'users', 'stats'));
+    }
+
+    public function archive(){
+        $options = Order::where('archive', '!=', '0')->get();     
+        $users = User::where('permission', '!=', '1')->get();     
+        $stats = Stat::all();
+        return view('order.archive', compact('options', 'users', 'stats'));
     }
   
 }

@@ -23,6 +23,7 @@
                         <table class="table align-items-center table-flush text-center"  id="datatable-basic">
                             <thead class="thead-light">
                                 <tr>
+                                    <th scope="dol">{{ __('Created')}}</th>
                                     <th scope="col">{{ __('Product Name') }}</th>
                                     <th scope="col">{{ __('Product Image') }}</th>
                                     <th scope="col">{{ __('Order information') }}</th>
@@ -40,6 +41,7 @@
                                         <input type="hidden" name="image" class="image" value="{{$option->image}}" />  
                                         <input type="hidden" name="info" class="info" value="{{$option->info}}" />  
 
+                                        <td> {{$option->created_at}} </td>
                                         <td>{{ $option->name }}</td>
                                         <td> <img src = {{asset($option->image)}} width = 100px> </td> 
                                         <td>{{ $option->info }}</td>
@@ -78,7 +80,7 @@
                                                     @if($option->users_id == '')
                                                         <a href="#" class="dropdown-item assign_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="assignModal"> <i class="ni ni-tag"></i> Assign </a>
                                                     @endif
-                                                    <a href="{{route('order.delete', $option->id)}}" onclick="return window.confirm('Are you sure?')" class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Delete"><i class="fa fa-trash"></i> Delete</a>
+                                                    <a href="{{route('order.delete', $option->id)}}" onclick="return window.confirm('Are you sure?')" class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Delete"><i class="fa fa-trash"></i> Archive</a>
                                                 </div>
                                             </div>
                                         </td>

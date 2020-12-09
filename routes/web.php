@@ -39,6 +39,7 @@ Route::get('/partner/{id}', [App\Http\Controllers\PartnerController::class, 'del
 
 Route::get('/order',  [App\Http\Controllers\OrderController::class, 'index'])->name('order.index');
 Route::get('/orderstat', [App\Http\Controllers\OrderController::class, 'partner'])->name('order.partner');
+Route::get('/archive', [App\Http\Controllers\OrderController::class, 'archive'])->name('order.archive');
 Route::get('/order/create', [App\Http\Controllers\OrderController::class, 'create'])->name('order.register');
 Route::post('/order/create', [App\Http\Controllers\OrderController::class, 'store'])->name('order.store');
 Route::post('/order', [App\Http\Controllers\OrderController::class, 'update'])->name('order.update');

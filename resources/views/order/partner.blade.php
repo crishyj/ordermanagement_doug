@@ -20,6 +20,7 @@
                         <table class="table align-items-center table-flush text-center"  id="datatable-basic">
                             <thead class="thead-light">
                                 <tr>
+                                    <th scope="col">{{ __('Created')}}</th>
                                     <th scope="col">{{ __('Product Name') }}</th>
                                     <th scope="col">{{ __('Product Image') }}</th>
                                     <th scope="col">{{ __('Order Status')}}</th>  
@@ -36,6 +37,7 @@
                                         <input type="hidden" name="info" class="info" value="{{$option->info}}" />  
                                         <input type="hidden" name="track" class="track" value="{{$option->track}}" />  
 
+                                        <td>{{ $option->created_at }}</td>
                                         <td>{{ $option->name }}</td>
                                         <td> <img src = {{asset($option->image)}} width = 100px> </td> 
                                         <td>

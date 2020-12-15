@@ -39,6 +39,8 @@ Route::get('/partner/{id}', [App\Http\Controllers\PartnerController::class, 'del
 
 Route::get('/order',  [App\Http\Controllers\OrderController::class, 'index'])->name('order.index');
 Route::get('/orderstat', [App\Http\Controllers\OrderController::class, 'partner'])->name('order.partner');
+Route::get('/order/adminStock', [App\Http\Controllers\OrderController::class, 'adminStock'])->name('order.adminStock');
+Route::get('/order/patnerStock', [App\Http\Controllers\OrderController::class, 'partnerStock'])->name('order.partnerStock');
 Route::get('/archive', [App\Http\Controllers\OrderController::class, 'archive'])->name('order.archive');
 Route::get('/order/create', [App\Http\Controllers\OrderController::class, 'create'])->name('order.register');
 Route::post('/order/create', [App\Http\Controllers\OrderController::class, 'store'])->name('order.store');

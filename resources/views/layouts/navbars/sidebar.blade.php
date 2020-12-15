@@ -17,51 +17,65 @@
         <div class="navbar-inner">
             <div class="collapse navbar-collapse" id="sidenav-collapse-main">
                 <ul class="navbar-nav">
-                @if(Auth::user()->permission == '1')
-                    <li class="nav-item ">
-                        <a class="nav-link collapsed" href="{{ route('partner.index') }}" role="button"  aria-controls="navbar-dashboards">
-                            <i class="ni ni-circle-08 text-primary"></i>
-                            <span class="nav-link-text">{{ __('Partner') }}</span>
-                        </a>                       
-                    </li>
-                
-                    <li class="nav-item ">
-                        <a class="nav-link collapsed" href="{{ route('order.index') }}" role="button"  aria-controls="navbar-dashboards">
-                            <i class="ni ni-book-bookmark text-primary"></i>
-                            <span class="nav-link-text">{{ __('Orders') }}</span>
-                        </a>                       
-                    </li>
-
-                    <li class="nav-item ">
-                        <a class="nav-link collapsed" href="{{ route('order.archive') }}" role="button"  aria-controls="navbar-dashboards">
-                            <i class="ni ni-book-bookmark text-primary"></i>
-                            <span class="nav-link-text">{{ __('Archive Orders') }}</span>
-                        </a>                       
-                    </li>
-
-                    <li class="nav-item ">
-                        <a class="nav-link collapsed" href="{{ route('partner.changepassword') }}" role="button"  aria-controls="navbar-dashboards">
-                            <i class="ni ni-book-bookmark text-primary"></i>
-                            <span class="nav-link-text">{{ __('Change Password') }}</span>
-                        </a>                       
-                    </li>
+                    @if(Auth::user()->permission == '1')
+                        <li class="nav-item ">
+                            <a class="nav-link collapsed" href="{{ route('partner.index') }}" role="button"  aria-controls="navbar-dashboards">
+                                <i class="ni ni-circle-08 text-primary"></i>
+                                <span class="nav-link-text">{{ __('Partner') }}</span>
+                            </a>                       
+                        </li>
                     
-                @else
+                        <li class="nav-item ">
+                            <a class="nav-link collapsed" href="{{ route('order.index') }}" role="button"  aria-controls="navbar-dashboards">
+                                <i class="ni ni-book-bookmark text-primary"></i>
+                                <span class="nav-link-text">{{ __('Orders') }}</span>
+                            </a>                       
+                        </li>
 
-                    <li class="nav-item ">
-                        <a class="nav-link collapsed" href="{{ route('partner.changepassword') }}" role="button"  aria-controls="navbar-dashboards">
-                            <i class="ni ni-book-bookmark text-primary"></i>
-                            <span class="nav-link-text">{{ __('Change Password') }}</span>
-                        </a>                       
-                    </li>
+                        <li class="nav-item ">
+                            <a class="nav-link collapsed" href="{{ route('order.archive') }}" role="button"  aria-controls="navbar-dashboards">
+                                <i class="ni ni-book-bookmark text-primary"></i>
+                                <span class="nav-link-text">{{ __('Archive Orders') }}</span>
+                            </a>                       
+                        </li>
 
-                    <li class="nav-item ">
-                        <a class="nav-link collapsed" href="{{ route('order.partner') }}" role="button"  aria-controls="navbar-dashboards">
-                            <i class="ni ni-book-bookmark text-primary"></i>
-                            <span class="nav-link-text">{{ __('Orders') }}</span>
-                        </a>                       
-                    </li>
-                @endif    
+                        <li class="nav-item ">
+                            <a class="nav-link collapsed" href="{{ route('order.adminStock') }}" role="button"  aria-controls="navbar-dashboards">
+                                <i class="ni ni-book-bookmark text-primary"></i>
+                                <span class="nav-link-text">{{ __('In Stock Partner Site') }}</span>
+                            </a>                       
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link collapsed" href="{{ route('partner.changepassword') }}" role="button"  aria-controls="navbar-dashboards">
+                                <i class="ni ni-book-bookmark text-primary"></i>
+                                <span class="nav-link-text">{{ __('Change Password') }}</span>
+                            </a>                       
+                        </li>
+                        
+                    @else
+
+                        <li class="nav-item ">
+                            <a class="nav-link collapsed" href="{{ route('partner.changepassword') }}" role="button"  aria-controls="navbar-dashboards">
+                                <i class="ni ni-book-bookmark text-primary"></i>
+                                <span class="nav-link-text">{{ __('Change Password') }}</span>
+                            </a>                       
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link collapsed" href="{{ route('order.partner') }}" role="button"  aria-controls="navbar-dashboards">
+                                <i class="ni ni-book-bookmark text-primary"></i>
+                                <span class="nav-link-text">{{ __('Orders') }}</span>
+                            </a>                       
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link collapsed" href="{{ route('order.partnerStock') }}" role="button"  aria-controls="navbar-dashboards">
+                                <i class="ni ni-book-bookmark text-primary"></i>
+                                <span class="nav-link-text">{{ __('In Stock Partner Site') }}</span>
+                            </a>                       
+                        </li>
+                    @endif    
                
                 </ul>
                

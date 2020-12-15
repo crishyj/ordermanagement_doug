@@ -22,6 +22,7 @@ class CreateOrdersTable extends Migration
             $table->integer('stats_id')->nullable();
             $table->string('track')->nullable();
             $table->string('archive')->default('0');
+            $table->string('stock_partner')->default('0');
             $table->timestamps();
         });
     }

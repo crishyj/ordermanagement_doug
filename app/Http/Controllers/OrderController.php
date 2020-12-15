@@ -16,7 +16,7 @@ class OrderController extends Controller
     }
     
     public function index(){
-        $options = Order::where('archive', '!=', '1')->get();     
+        $options = Order::where('archive', '!=', '1')->where('stock_partner', '!=', '1')->get();     
         $users = User::where('permission', '!=', '1')->get();     
         $stats = Stat::all();
         return view('order.index', compact('options', 'users', 'stats'));
@@ -213,12 +213,20 @@ class OrderController extends Controller
         //     $options->save();
         //     return response()->json('success');
         // }
-        elseif($request->get('stat')){      
+        elseif($request->get('stat')){     
+            
             $options = Order::find($request->get('id'));
             $options->name = $request->get('name');
             $options->info = $request->get('info');
             $options->stats_id = $request->get('stat');
             $options->track = $request->get('track');
+            
+            if($request->get('stat') == 2){
+                $options->stock_partner = 1;
+            }
+            else{
+                $options->stock_partner = 0;
+            }
 
             $sender_id = $options->users_id;
             $sender = User::find($sender_id);
@@ -314,7 +322,7 @@ class OrderController extends Controller
     public function partner(){
         $userId = Auth::id();      
         $users = User::find($userId);
-        $orders = Order::where('users_id', $userId)->where('archive', '!=', '1')->get();        
+        $orders = Order::where('users_id', $userId)->where('archive', '!=', '1')->where('stock_partner', '!=', '1')->get();        
         $stats = Stat::all();
         return view('order.partner', compact('orders', 'users', 'stats'));
     }
@@ -324,6 +332,21 @@ class OrderController extends Controller
         $users = User::where('permission', '!=', '1')->get();     
         $stats = Stat::all();
         return view('order.archive', compact('options', 'users', 'stats'));
+    }
+
+    public function adminStock(){
+        $options = Order::where('stock_partner', '!=', '0')->get();
+        $users = User::where('permission', '!=', '1')->get();     
+        $stats = Stat::all();
+        return view('order.adminStock', compact('options', 'users', 'stats'));
+    }
+
+    public function partnerStock(){
+        $userId = Auth::id();      
+        $users = User::find($userId);
+        $orders = Order::where('users_id', $userId)->where('stock_partner', '!=', '0')->get();        
+        $stats = Stat::all();
+        return view('order.partnerStock', compact('orders', 'users', 'stats'));
     }
   
 }

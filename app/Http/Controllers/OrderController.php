@@ -95,6 +95,7 @@ class OrderController extends Controller
             $options = Order::find($request->get('id'));
             $options->name = $request->get('name');
             $options->info = $request->get('info');
+
             if($request->image != 'undefined'){
                 unlink($options['image']);
                 $image = time().'.'.$request->image->getClientOriginalExtension();  
@@ -105,6 +106,7 @@ class OrderController extends Controller
 
             $receiver = User::find($options->users_id);
             $receiver_email = $receiver->email;
+            
 
             $sender = User::find(1);
             $sender_email = $sender->email;
@@ -232,13 +234,87 @@ class OrderController extends Controller
             else{
                 $options->stock_partner = 0;
             }
-
-            $sender_id = $options->users_id;
-            $sender = User::find($sender_id);
-            $sender_email = $sender->email;
-
-            $receiver = User::find(1);
+           
+            $receiver_id = $options->users_id;
+            $receiver = User::find($receiver_id);
             $receiver_email = $receiver->email;
+            
+            $sender = User::find(1);
+            $sender_email = $sender->email;
+           
+       
+            $product_image =url('/'). '/'. $options->image;
+
+            $name = $request->get('name');
+            $info = $request->get('info');
+            $stats = Stat::find($options->stats_id);
+            $stat = $stats->name;
+            $trak = $request->get('track');
+
+            $emailFrom = $sender_email;
+            $reply = $sender_email;
+            $to = $receiver_email;
+            $subject = "Update Order";
+            
+            $message = '<body >
+                <div style="width:500px; margin:10px auto; background:#f1f1f1; border:1px solid #ccc">
+                    <table  width="100%" border="0" cellspacing="5" cellpadding="10">
+                        <tr>
+                            <td style="font-size:14px; color:#323232">Product Name</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:16px; font-weight:bold"><strong>' . $name .'</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:14px; color:#323232">Order Status :</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:16px;  font-weight:bold"><strong>'.$stat .'</strong></td>
+                        </tr>                          
+                    </table>
+                </div>
+            </body>
+            ';
+           
+            $headers = "From:" . $emailFrom . "\r\n";
+            $headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
+          
+            mail($to,$subject,$message,$headers);
+
+            $options->save();
+            return response()->json('success');
+        }
+        elseif($request->get('archive')){     
+
+            $options = Order::find($request->get('id'));
+            
+            $options->name = $request->get('name');
+            $options->info = $request->get('info');
+            $options->stats_id = $request->get('stat');
+            $options->archive = '0';
+
+            if($request->image != 'undefined'){
+                unlink($options['image']);
+                $image = time().'.'.$request->image->getClientOriginalExtension();  
+                $request->image->move(public_path('image/'), $image);
+                $image_file = 'image/'.$image;
+                $options->image = $image_file;
+            }
+            
+            if($request->get('stat') == 2){
+                $options->stock_partner = 1;
+            }
+            else{
+                $options->stock_partner = 0;
+            }
+           
+            $receiver_id = $options->users_id;
+            $receiver = User::find($receiver_id);
+            $receiver_email = $receiver->email;
+            
+            $sender = User::find(1);
+            $sender_email = $sender->email;
+           
        
             $product_image =url('/'). '/'. $options->image;
 
@@ -393,7 +469,8 @@ class OrderController extends Controller
         $options = Order::where('archive', '!=', '0')->get();     
         $users = User::where('permission', '!=', '1')->get();     
         $stats = Stat::all();
-        return view('order.archive', compact('options', 'users', 'stats'));
+        $changeStats = Stat::where('id', '!=', '2')->where('id', '!=', '3')->where('id', '!=', '4')->get();
+        return view('order.archive', compact('options', 'users', 'stats', 'changeStats'));
     }
 
     public function adminStock(){

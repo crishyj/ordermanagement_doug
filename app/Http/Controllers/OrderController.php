@@ -63,15 +63,6 @@ class OrderController extends Controller
                         <td style="font-size:16px; font-weight:bold"><strong>' . $product_name .'</strong></td>
                     </tr>
                     <tr>
-                        <td style="font-size:14px; color:#323232">Product Information :</td>
-                    </tr>
-                    <tr>
-                        <td style="font-size:16px;  font-weight:bold"><strong>'.$product_info .'</strong></td>
-                    </tr>
-                    <tr>
-                        <td style="font-size:14px; color:#323232"> <a href ="'.$product_image.'"> Product Image </a> </td>
-                    </tr>                     
-                    <tr>
                         <td style="font-size:14px; color:#323232"> <a href ="'.url('/').'/orderstat"> View Order </a> </td>
                     </tr> 
                 </table>
@@ -99,19 +90,26 @@ class OrderController extends Controller
     }
 
     public function update(Request $request){
-        if($request->get('user')){
-            $options = Order::find($request->get('id'));
-            $options->users_id = $request->get('user');  
+        if($request->get('admin_update')){
 
-            $receiver = User::find($request->get('user'));
+            $options = Order::find($request->get('id'));
+            $options->name = $request->get('name');
+            $options->info = $request->get('info');
+            if($request->image != 'undefined'){
+                unlink($options['image']);
+                $image = time().'.'.$request->image->getClientOriginalExtension();  
+                $request->image->move(public_path('image/'), $image);
+                $image_file = 'image/'.$image;
+                $options->image = $image_file;
+            }
+
+            $receiver = User::find($options->users_id);
             $receiver_email = $receiver->email;
 
             $sender = User::find(1);
             $sender_email = $sender->email;
 
             $product_name = $options->name;
-            $product_info = $options->info;
-            $product_image =url('/'). '/'. $options->image;
             
             $emailFrom = $sender_email;
             $reply = $sender_email;
@@ -128,15 +126,6 @@ class OrderController extends Controller
                             <td style="font-size:16px; font-weight:bold"><strong>' . $product_name .'</strong></td>
                         </tr>
                         <tr>
-                            <td style="font-size:14px; color:#323232">Product Information :</td>
-                        </tr>
-                        <tr>
-                            <td style="font-size:16px;  font-weight:bold"><strong>'.$product_info .'</strong></td>
-                        </tr>
-                        <tr>
-                            <td style="font-size:14px; color:#323232"> <a href ="'.$product_image.'"> Product Image </a> </td>
-                        </tr>                                 
-                        <tr>
                             <td style="font-size:14px; color:#323232"> <a href ="'.url('/').'/orderstat"> View Order </a> </td>
                         </tr>                           
                     </table>
@@ -152,74 +141,90 @@ class OrderController extends Controller
             $options->save();
             return response()->json('success');
 
-        }
-        // elseif($request->get('stat')){         
-        //     $options = Order::find($request->get('id'));
-        //     $options->stats_id = $request->get('stat');
-
-        //     $sender_id = $options->users_id;
-        //     $sender = User::find($sender_id);
-        //     $sender_email = $sender->email;
-
-        //     $receiver = User::find(1);
-        //     $receiver_email = $receiver->email;
-
-        //     $stats = Stat::find($options->stats_id);
-        //     $stat = $stats->name;
-            
-        //     $product_name = $options->name;
-        //     $product_info = $options->info;
-        //     $product_image =url('/'). '/'. $options->image;
-
-        //     $emailFrom = $sender_email;
-        //     $reply = $sender_email;
-        //     $to = $receiver_email;
-        //     $subject = "Order Status";
-            
-        //     $message = '<body >
-        //         <div style="width:500px; margin:10px auto; background:#f1f1f1; border:1px solid #ccc">
-        //             <table  width="100%" border="0" cellspacing="5" cellpadding="10">
-        //                 <tr>
-        //                     <td style="font-size:14px; color:#323232">Product Name</td>
-        //                 </tr>
-        //                 <tr>
-        //                     <td style="font-size:16px; font-weight:bold"><strong>' . $product_name .'</strong></td>
-        //                 </tr>
-        //                 <tr>
-        //                     <td style="font-size:14px; color:#323232">Product Information :</td>
-        //                 </tr>
-        //                 <tr>
-        //                     <td style="font-size:16px;  font-weight:bold"><strong>'.$product_info .'</strong></td>
-        //                 </tr>
-        //                 <tr>
-        //                     <td style="font-size:14px; color:#323232"> <a href ="'.$product_image.'"> Product Image </a> </td>
-        //                 </tr>       
-        //                 <tr>
-        //                     <td style="font-size:14px; color:#323232">Order Status :</td>
-        //                 </tr>
-        //                 <tr>
-        //                     <td style="font-size:16px;  font-weight:bold"><strong>'.$stat .'</strong></td>
-        //                 </tr>                                                 
-        //             </table>
-        //         </div>
-        //     </body>
-        //     ';
-           
-        //     $headers = "From:" . $emailFrom . "\r\n";
-        //     $headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
-          
-        //     mail($to,$subject,$message,$headers);
-
-        //     $options->save();
-        //     return response()->json('success');
-        // }
-        elseif($request->get('stat')){     
+        }       
+        elseif($request->get('update_partner')){     
             
             $options = Order::find($request->get('id'));
             $options->name = $request->get('name');
             $options->info = $request->get('info');
             $options->stats_id = $request->get('stat');
             $options->track = $request->get('track');
+            
+            if($request->get('stat') == 2){
+                $options->stock_partner = 1;
+            }
+            else{
+                $options->stock_partner = 0;
+            }
+
+            $sender_id = $options->users_id;
+            $sender = User::find($sender_id);
+            $sender_email = $sender->email;
+
+            $receiver = User::find(1);
+            $receiver_email = $receiver->email;
+       
+
+            $name = $request->get('name');
+            $info = $request->get('info');
+            $stats = Stat::find($options->stats_id);
+            $stat = $stats->name;
+            $trak = $request->get('track');
+
+            $emailFrom = $sender_email;
+            $reply = $sender_email;
+            $to = $receiver_email;
+            $subject = "Order Track";
+            
+            $message = '<body >
+                <div style="width:500px; margin:10px auto; background:#f1f1f1; border:1px solid #ccc">
+                    <table  width="100%" border="0" cellspacing="5" cellpadding="10">
+                        <tr>
+                            <td style="font-size:14px; color:#323232">Product Name</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:16px; font-weight:bold"><strong>' . $name .'</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:14px; color:#323232">Order Status :</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:16px;  font-weight:bold"><strong>'.$stat .'</strong></td>
+                        </tr>                          
+                        <tr>
+                            <td style="font-size:14px; color:#323232">Order Track :</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size:16px;  font-weight:bold"><strong>'. $trak .'</strong></td>
+                        </tr>  
+                    </table>
+                </div>
+            </body>
+            ';
+           
+            $headers = "From:" . $emailFrom . "\r\n";
+            $headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
+          
+            mail($to,$subject,$message,$headers);
+
+            $options->save();
+            return response()->json('success');
+        }
+        elseif($request->get('update_stock')){     
+
+            $options = Order::find($request->get('id'));
+            
+            $options->name = $request->get('name');
+            $options->info = $request->get('info');
+            $options->stats_id = $request->get('stat');
+
+            if($request->image != 'undefined'){
+                unlink($options['image']);
+                $image = time().'.'.$request->image->getClientOriginalExtension();  
+                $request->image->move(public_path('image/'), $image);
+                $image_file = 'image/'.$image;
+                $options->image = $image_file;
+            }
             
             if($request->get('stat') == 2){
                 $options->stock_partner = 1;
@@ -246,7 +251,7 @@ class OrderController extends Controller
             $emailFrom = $sender_email;
             $reply = $sender_email;
             $to = $receiver_email;
-            $subject = "Order Track";
+            $subject = "Update Order";
             
             $message = '<body >
                 <div style="width:500px; margin:10px auto; background:#f1f1f1; border:1px solid #ccc">
@@ -258,26 +263,73 @@ class OrderController extends Controller
                             <td style="font-size:16px; font-weight:bold"><strong>' . $name .'</strong></td>
                         </tr>
                         <tr>
-                            <td style="font-size:14px; color:#323232">Product Information :</td>
+                            <td style="font-size:14px; color:#323232">Order Status :</td>
                         </tr>
                         <tr>
-                            <td style="font-size:16px;  font-weight:bold"><strong>'.$info .'</strong></td>
+                            <td style="font-size:16px;  font-weight:bold"><strong>'.$stat .'</strong></td>
+                        </tr>                          
+                    </table>
+                </div>
+            </body>
+            ';
+           
+            $headers = "From:" . $emailFrom . "\r\n";
+            $headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
+          
+            mail($to,$subject,$message,$headers);
+
+            $options->save();
+            return response()->json('success');
+        }
+        elseif($request->get('partner_stock')){     
+
+            $options = Order::find($request->get('id'));
+            $options->name = $request->get('name');
+            $options->info = $request->get('info');
+            $options->stats_id = $request->get('stat');
+            
+            if($request->get('stat') == 2){
+                $options->stock_partner = 1;
+            }
+            else{
+                $options->stock_partner = 0;
+            }
+
+            $sender_id = $options->users_id;
+            $sender = User::find($sender_id);
+            $sender_email = $sender->email;
+
+            $receiver = User::find(1);
+            $receiver_email = $receiver->email;
+       
+            $product_image =url('/'). '/'. $options->image;
+
+            $name = $request->get('name');
+            $info = $request->get('info');
+            $stats = Stat::find($options->stats_id);
+            $stat = $stats->name;
+            $trak = $request->get('track');
+
+            $emailFrom = $sender_email;
+            $reply = $sender_email;
+            $to = $receiver_email;
+            $subject = "Update Order";
+            
+            $message = '<body >
+                <div style="width:500px; margin:10px auto; background:#f1f1f1; border:1px solid #ccc">
+                    <table  width="100%" border="0" cellspacing="5" cellpadding="10">
+                        <tr>
+                            <td style="font-size:14px; color:#323232">Product Name</td>
                         </tr>
                         <tr>
-                            <td style="font-size:14px; color:#323232"> <a href ="'.$product_image.'"> Product Image </a> </td>
-                        </tr>       
+                            <td style="font-size:16px; font-weight:bold"><strong>' . $name .'</strong></td>
+                        </tr>
                         <tr>
                             <td style="font-size:14px; color:#323232">Order Status :</td>
                         </tr>
                         <tr>
                             <td style="font-size:16px;  font-weight:bold"><strong>'.$stat .'</strong></td>
                         </tr>                          
-                        <tr>
-                            <td style="font-size:14px; color:#323232">Order Track :</td>
-                        </tr>
-                        <tr>
-                            <td style="font-size:16px;  font-weight:bold"><strong>'. $trak .'</strong></td>
-                        </tr>  
                     </table>
                 </div>
             </body>
@@ -309,7 +361,7 @@ class OrderController extends Controller
         }
     }
 
-    public function delete($id){
+    public function move_archive($id){
         $options = Order::find($id);
         if (!$options) {
             return back()->withErrors(['delete' => 'Something went wrong.']);
@@ -317,6 +369,16 @@ class OrderController extends Controller
         $options->archive = '1';
         $options->save();  
         return back()->with('success', 'Succefully Moved');
+    }
+
+    public function delete($id){
+        $options = Order::find($id);
+        if (!$options) {
+            return back()->withErrors(['delete' => 'Something went wrong.']);
+        }
+        unlink($options['image']);
+        $options->delete();        
+        return back()->with('success', 'Deleted Successfully');
     }
 
     public function partner(){
@@ -338,7 +400,8 @@ class OrderController extends Controller
         $options = Order::where('stock_partner', '!=', '0')->get();
         $users = User::where('permission', '!=', '1')->get();     
         $stats = Stat::all();
-        return view('order.adminStock', compact('options', 'users', 'stats'));
+        $changeStats = Stat::where('id', '!=', '2')->where('id', '!=', '3')->where('id', '!=', '4')->get();
+        return view('order.adminStock', compact('options', 'users', 'stats', 'changeStats'));
     }
 
     public function partnerStock(){

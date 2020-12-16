@@ -23,7 +23,7 @@
                         <table class="table align-items-center table-flush text-center"  id="datatable-basic">
                             <thead class="thead-light">
                                 <tr>
-                                    <th scope="dol">{{ __('Created')}}</th>
+                                    <th scope="col">{{ __('Created')}}</th>
                                     <th scope="col">{{ __('Product Name') }}</th>
                                     <th scope="col">{{ __('Product Image') }}</th>
                                     <th scope="col">{{ __('Order information') }}</th>
@@ -80,7 +80,8 @@
                                                     @if($option->users_id == '')
                                                         <a href="#" class="dropdown-item assign_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="assignModal"> <i class="ni ni-tag"></i> Assign </a>
                                                     @endif
-                                                    <a href="{{route('order.delete', $option->id)}}" onclick="return window.confirm('Are you sure?')" class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Delete"><i class="fa fa-trash"></i> Archive</a>
+                                                    <a href="{{route('order.move_archive', $option->id)}}" onclick="return window.confirm('Are you sure?')" class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Archive"><i class="fa fa-trash"></i> Archive</a>
+                                                    <a href="{{route('order.delete', $option->id)}}" onclick="return window.confirm('Are you sure?')" class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Delete"><i class="fa fa-trash"></i> Delete</a>
                                                 </div>
                                             </div>
                                         </td>
@@ -94,14 +95,6 @@
         </div>
     </div>
 
-    <!-- <div class="modal fade" id ="imageModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <img src = "" class="product_image">
-            </div>
-        </div>
-    </div> -->
-    
     <div class="modal fade" id="editModal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -255,7 +248,7 @@
                 let name = $('#name').val();
                 let info = $('#info').val(); 
                 var image = $('#image').prop('files')[0];
-             
+                let admin_update = 1;
 
                 var form_data =new FormData();
             
@@ -265,6 +258,8 @@
                 form_data.append("info", info);
                 form_data.append("image", image);
                 form_data.append("upload_file", true);
+                form_data.append("admin_update", admin_update);
+
                 $.ajax({
                     url: "{{route('order.update')}}",
                     type: 'POST',

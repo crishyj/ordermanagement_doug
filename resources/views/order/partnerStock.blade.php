@@ -54,18 +54,6 @@
                                         <td>{{ $option->track }}</td>
                                         <td class="text-right">
                                             <a href="#" class="btn btn-primary track_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="trackModal"> View Order </a>
-                                            <!-- <div class="dropdown">
-
-                                                <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                    <a href="#" class="dropdown-item detail_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="trackModal"> <i class="ni ni-tag"></i> View Order </a>
-                                                    <a href="#" class="dropdown-item stat_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="assignModal"> <i class="ni ni-tag"></i> View Status </a>
-                                                    <a href="#" class="dropdown-item track_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="trackModal"> <i class="ni ni-tag"></i> Add Tracking </a>
-                                                </div>
-                                            </div> -->
-                                         
                                         </td>
                                     </tr>
                                 @endforeach
@@ -186,6 +174,7 @@
                 let info = $('#info').val();
                 let stat = $('#stat').val(); 
                 let track = $('#track').val();
+                let partner_stock = 1;
 
                 var form_data =new FormData();
                 form_data.append("_token", _token);
@@ -193,7 +182,8 @@
                 form_data.append("name", name);   
                 form_data.append("info", info);   
                 form_data.append("stat", stat);       
-                form_data.append("track", track);            
+                form_data.append("track", track);    
+                form_data.append('partner_stock', partner_stock);
                 
                 $.ajax({
                     url: "{{route('order.update')}}",

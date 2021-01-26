@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+Route::get('/passwordreset_request', [App\Http\Controllers\PasswordController::class, 'passwordreset_request'])->name('passwordreset_request');
+Route::post('/passwordreset_request', [App\Http\Controllers\PasswordController::class, 'passwordreset_update'])->name('passwordreset_update');
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', function () {
         return view('home');

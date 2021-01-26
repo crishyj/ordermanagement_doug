@@ -23,7 +23,6 @@ class PartnerController extends Controller
     public function create(){
         return view('partner.create');
     }  
- 
   
     protected function store(Request $request)
     {

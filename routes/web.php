@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/passwordreset_request', [App\Http\Controllers\PasswordController::class, 'passwordreset_request'])->name('passwordreset_request');
-Route::post('/passwordreset_request', [App\Http\Controllers\PasswordController::class, 'passwordreset_update'])->name('passwordreset_update');
+Route::post('/passwordreset_request', [App\Http\Controllers\PasswordController::class, 'passwordreset_link'])->name('passwordreset_link');
+Route::get('/passwordreset_request/{id}', [App\Http\Controllers\PasswordController::class, 'passwordreset_updatepage'])->name('passwordreset_updatepage');
+Route::post('/passwordreset_update', [App\Http\Controllers\PasswordController::class, 'passwordreset_update'])->name('passwordreset_update');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', function () {

@@ -17,7 +17,8 @@ class OrderController extends Controller
     
     public function index(){
         $options = Order::where('archive', '!=', '1')->where('stock_partner', '!=', '1')->get();     
-        $users = User::where('permission', '!=', '1')->get();     
+        // $users = User::where('permission', '!=', '1')->get();     
+        $users = User::all();     
         $stats = Stat::all();
         return view('order.index', compact('options', 'users', 'stats'));
     }
@@ -31,6 +32,7 @@ class OrderController extends Controller
         $image = time().'.'.$request->image->getClientOriginalExtension();  
         $request->image->move(public_path('image/'), $image);
         $image_file = 'image/'.$image;
+        $touched_userId = Auth::user()->id;
        
         $request->validate([
             'name' => ['required', 'string', 'max:255'],           
@@ -82,6 +84,7 @@ class OrderController extends Controller
             'info' => $request['info'],
             'users_id' => $request['user'],
             'stats_id' => '1',
+            'touched_userId' => $touched_userId
         ]);
         
         $options->save();
@@ -91,10 +94,12 @@ class OrderController extends Controller
 
     public function update(Request $request){
         if($request->get('admin_update')){
+            $touched_userId = Auth::user()->id;
 
             $options = Order::find($request->get('id'));
             $options->name = $request->get('name');
             $options->info = $request->get('info');
+            $options->touched_userId = $touched_userId;
 
             if($request->image != 'undefined'){
                 unlink($options['image']);
@@ -145,12 +150,14 @@ class OrderController extends Controller
 
         }       
         elseif($request->get('update_partner')){     
-            
+            $touched_userId = Auth::user()->id;
+
             $options = Order::find($request->get('id'));
             $options->name = $request->get('name');
             $options->info = $request->get('info');
             $options->stats_id = $request->get('stat');
             $options->track = $request->get('track');
+            $options->touched_userId = $touched_userId;
             
             if($request->get('stat') == 2){
                 $options->stock_partner = 1;
@@ -213,12 +220,14 @@ class OrderController extends Controller
             return response()->json('success');
         }
         elseif($request->get('update_stock')){     
+            $touched_userId = Auth::user()->id;
 
             $options = Order::find($request->get('id'));
             
             $options->name = $request->get('name');
             $options->info = $request->get('info');
             $options->stats_id = $request->get('stat');
+            $options->touched_userId = $touched_userId;
 
             if($request->image != 'undefined'){
                 unlink($options['image']);
@@ -284,13 +293,15 @@ class OrderController extends Controller
             $options->save();
             return response()->json('success');
         }
-        elseif($request->get('archive')){     
+        elseif($request->get('archive')){   
+            $touched_userId = Auth::user()->id;
 
             $options = Order::find($request->get('id'));
             
             $options->name = $request->get('name');
             $options->info = $request->get('info');
             $options->stats_id = $request->get('stat');
+            $options->touched_userId = $touched_userId; 
             $options->archive = '0';
 
             if($request->image != 'undefined'){
@@ -357,12 +368,14 @@ class OrderController extends Controller
             $options->save();
             return response()->json('success');
         }
-        elseif($request->get('partner_stock')){     
+        elseif($request->get('partner_stock')){   
+            $touched_userId = Auth::user()->id;  
 
             $options = Order::find($request->get('id'));
             $options->name = $request->get('name');
             $options->info = $request->get('info');
             $options->stats_id = $request->get('stat');
+            $options->touched_userId = $touched_userId;
             
             if($request->get('stat') == 2){
                 $options->stock_partner = 1;
@@ -420,6 +433,7 @@ class OrderController extends Controller
             return response()->json('success');
         }
         else{
+            $touched_userId = Auth::user()->id; 
             $options = Order::find($request->get('id'));
 
             if($request->image !='undefined'){
@@ -432,22 +446,47 @@ class OrderController extends Controller
     
             $options->name = $request->get('name');
             $options->info = $request->get('info');
+            $options->touched_userId = $touched_userId;
             $options->save();
             return response()->json('success');
         }
     }
 
-    public function move_archive($id){
-        $options = Order::find($id);
-        if (!$options) {
-            return back()->withErrors(['delete' => 'Something went wrong.']);
+    public function move_archive($id, $slug){
+        if($slug == 'move_archive'){
+            $touched_userId = Auth::user()->id; 
+            $options = Order::find($id);
+            if (!$options) {
+                return back()->withErrors(['delete' => 'Something went wrong.']);
+            }
+            $options->archive = '1';
+            $options->touched_userId = $touched_userId;
+            $options->save();
         }
-        $options->archive = '1';
-        $options->save();  
+        else if($slug == 'move_stock'){
+            $touched_userId = Auth::user()->id; 
+            $options = Order::find($id);
+            if (!$options) {
+                return back()->withErrors(['delete' => 'Something went wrong.']);
+            }
+            $options->stock_partner = '1';
+            $options->touched_userId = $touched_userId;
+            $options->save();
+        }
+        else if($slug == 'delete'){
+            $options = Order::find($id);
+            if (!$options) {
+                return back()->withErrors(['delete' => 'Something went wrong.']);
+            }
+            unlink($options['image']);
+            $options->delete();        
+        }
+         
         return back()->with('success', 'Succefully Moved');
     }
 
     public function delete($id){
+        dd($id);
         $options = Order::find($id);
         if (!$options) {
             return back()->withErrors(['delete' => 'Something went wrong.']);
@@ -460,14 +499,15 @@ class OrderController extends Controller
     public function partner(){
         $userId = Auth::id();      
         $users = User::find($userId);
+        $userLists = User::all();
         $orders = Order::where('users_id', $userId)->where('archive', '!=', '1')->where('stock_partner', '!=', '1')->get();        
         $stats = Stat::all();
-        return view('order.partner', compact('orders', 'users', 'stats'));
+        return view('order.partner', compact('orders', 'users', 'stats', 'userLists'));
     }
 
     public function archive(){
         $options = Order::where('archive', '!=', '0')->get();     
-        $users = User::where('permission', '!=', '1')->get();     
+        $users = User::all();  
         $stats = Stat::all();
         $changeStats = Stat::where('id', '!=', '2')->where('id', '!=', '3')->where('id', '!=', '4')->get();
         return view('order.archive', compact('options', 'users', 'stats', 'changeStats'));
@@ -475,7 +515,7 @@ class OrderController extends Controller
 
     public function adminStock(){
         $options = Order::where('stock_partner', '!=', '0')->get();
-        $users = User::where('permission', '!=', '1')->get();     
+        $users = User::all();     
         $stats = Stat::all();
         $changeStats = Stat::where('id', '!=', '2')->where('id', '!=', '3')->where('id', '!=', '4')->get();
         return view('order.adminStock', compact('options', 'users', 'stats', 'changeStats'));
@@ -484,9 +524,10 @@ class OrderController extends Controller
     public function partnerStock(){
         $userId = Auth::id();      
         $users = User::find($userId);
+        $userLists = User::all();
         $orders = Order::where('users_id', $userId)->where('stock_partner', '!=', '0')->get();        
         $stats = Stat::all();
-        return view('order.partnerStock', compact('orders', 'users', 'stats'));
+        return view('order.partnerStock', compact('orders', 'users', 'stats', 'userLists'));
     }
   
 }

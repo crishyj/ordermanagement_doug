@@ -24,10 +24,12 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col">{{ __('Created')}}</th>
+                                    <th scope="col">{{ __('Updated')}}</th>
+                                    <th scope="col">{{ __('Changed User') }}</th>
                                     <th scope="col">{{ __('Product Name') }}</th>
                                     <th scope="col">{{ __('Product Image') }}</th>
                                     <th scope="col">{{ __('Order information') }}</th>
-                                    <th scope="col">{{ __('Partner Name') }}</th>     
+                                    <th scope="col">{{ __('Partner Name') }}</th>  
                                     <th scope="col">{{ __('Order Status')}}</th>  
                                     <th scope="col">{{ __('Order Track')}}</th>  
                                     <th scope="col"></th>                                  
@@ -42,6 +44,18 @@
                                         <input type="hidden" name="info" class="info" value="{{$option->info}}" />  
 
                                         <td> {{$option->created_at}} </td>
+                                        <td> {{$option->updated_at}} </td>
+                                        <td> 
+                                            @forelse($users as $user)
+                                                @php
+                                                    if($user->id == $option->touched_userId){
+                                                        echo $user->name;
+                                                    } 
+                                                @endphp
+                                            @empty       
+                                            
+                                            @endforelse   
+                                        </td>
                                         <td>{{ $option->name }}</td>
                                         <td> <img src = {{asset($option->image)}} width = 100px> </td> 
                                         <td>{{ $option->info }}</td>
@@ -56,6 +70,7 @@
                                             
                                             @endforelse   
                                         </td>
+                                        
                                         <td>
                                             @forelse($stats as $stat)
                                                 @php
@@ -80,8 +95,9 @@
                                                     @if($option->users_id == '')
                                                         <a href="#" class="dropdown-item assign_btn" data-id="{{$option->id}}" data-toggle="tooltip" data-placement="bottom" title="" data-modal="assignModal"> <i class="ni ni-tag"></i> Assign </a>
                                                     @endif
-                                                    <a href="{{route('order.move_archive', $option->id)}}" onclick="return window.confirm('Are you sure?')" class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Archive"><i class="fa fa-trash"></i> Archive</a>
-                                                    <a href="{{route('order.delete', $option->id)}}" onclick="return window.confirm('Are you sure?')" class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Delete"><i class="fa fa-trash"></i> Delete</a>
+                                                    <a href="{{route('order.move_archive', [$option->id, 'move_archive'])}}" onclick="return window.confirm('Are you sure?')" class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Archive"><i class="fa fa-trash"></i> Archive</a>
+                                                    <a href="{{route('order.move_archive', [$option->id, 'move_stock'])}}" onclick="return window.confirm('Are you sure?')" class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Archive"><i class="fa fa-trash"></i> Partner in Stock</a>
+                                                    <a href="{{route('order.move_archive', [$option->id, 'delete'])}}" onclick="return window.confirm('Are you sure?')" class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Delete"><i class="fa fa-trash"></i> Delete</a>
                                                 </div>
                                             </div>
                                         </td>
@@ -243,6 +259,7 @@
             });
 
             $("#edit_form .btn-submit").click(function(){
+    
                 let _token = $('input[name=_token]').val();
                 let id = $('#id').val();
                 let name = $('#name').val();

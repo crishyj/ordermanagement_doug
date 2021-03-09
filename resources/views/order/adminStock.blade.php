@@ -21,10 +21,12 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="dol">{{ __('Created')}}</th>
+                                    <th scope="dol">{{ __('Updated')}}</th>
+                                    <th scope="col">{{ __('Changed User') }}</th>
                                     <th scope="col">{{ __('Product Name') }}</th>
                                     <th scope="col">{{ __('Product Image') }}</th>
                                     <th scope="col">{{ __('Order information') }}</th>
-                                    <th scope="col">{{ __('Partner Name') }}</th>     
+                                    <th scope="col">{{ __('Partner Name') }}</th>                                           
                                     <th scope="col">{{ __('Order Status')}}</th>  
                                     <th scope="col">{{ __('Order Track')}}</th>  
                                     <th scope="col">{{ __('Update')}}</th>
@@ -39,6 +41,18 @@
                                         <input type="hidden" name="info" class="info" value="{{$option->info}}" />  
 
                                         <td> {{$option->created_at}} </td>
+                                        <td> {{$option->updated_at}} </td>
+                                        <td> 
+                                            @forelse($users as $user)
+                                                @php
+                                                    if($user->id == $option->touched_userId){
+                                                        echo $user->name;
+                                                    } 
+                                                @endphp
+                                            @empty       
+                                            
+                                            @endforelse   
+                                        </td>
                                         <td>{{ $option->name }}</td>
                                         <td> <img src = {{asset($option->image)}} width = 100px> </td> 
                                         <td>{{ $option->info }}</td>
@@ -53,6 +67,7 @@
                                             
                                             @endforelse   
                                         </td>
+                                       
                                         <td>
                                             @forelse($stats as $stat)
                                                 @php

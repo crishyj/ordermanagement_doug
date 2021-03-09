@@ -140,6 +140,7 @@
             });
 
             $("#edit_form .btn-submit").click(function(){
+               
                 let _token = $('input[name=_token]').val();
                 let id = $('#id').val();
                 let name = $('#name').val();

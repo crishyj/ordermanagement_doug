@@ -21,6 +21,8 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col">{{ __('Created')}}</th>
+                                    <th scope="dol">{{ __('Updated')}}</th>
+                                    <th scope="col">{{ __('Changed User') }}</th>
                                     <th scope="col">{{ __('Product Name') }}</th>
                                     <th scope="col">{{ __('Product Image') }}</th>
                                     <th scope="col">{{ __('Order Status')}}</th>  
@@ -38,6 +40,18 @@
                                         <input type="hidden" name="track" class="track" value="{{$option->track}}" />  
 
                                         <td>{{ $option->created_at }}</td>
+                                        <td> {{$option->updated_at}} </td>
+                                        <td> 
+                                            @forelse($userLists as $user)
+                                                @php
+                                                    if($user->id == $option->touched_userId){
+                                                        echo $user->name;
+                                                    } 
+                                                @endphp
+                                            @empty       
+                                            
+                                            @endforelse   
+                                        </td>
                                         <td>{{ $option->name }}</td>
                                         <td> <img src = {{asset($option->image)}} width = 100px> </td> 
                                         <td>

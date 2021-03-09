@@ -51,6 +51,6 @@ Route::get('/archive', [App\Http\Controllers\OrderController::class, 'archive'])
 Route::get('/order/create', [App\Http\Controllers\OrderController::class, 'create'])->name('order.register');
 Route::post('/order/create', [App\Http\Controllers\OrderController::class, 'store'])->name('order.store');
 Route::post('/order', [App\Http\Controllers\OrderController::class, 'update'])->name('order.update');
-Route::get('/order/{id}', [App\Http\Controllers\OrderController::class, 'move_archive'])->name('order.move_archive');
+Route::get('/order/{id}/{slug}', [App\Http\Controllers\OrderController::class, 'move_archive'])->name('order.move_archive');
 Route::get('/order/delete/{id}', [App\Http\Controllers\OrderController::class, 'delete'])->name('order.delete');
 
